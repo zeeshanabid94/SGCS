@@ -31,6 +31,7 @@ public class Video {
 			  frames[frameIndex] = singleFrame;
 		  }
 	  }
+	  
 	  public Frame getFrame(int frameNumber) {
 		  return frames[frameNumber];
 	  }
