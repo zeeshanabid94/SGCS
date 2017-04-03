@@ -1,12 +1,13 @@
 
 public class MacroBlock {
-	static int Size = 16;
+	static int SIZE = 16;
 	int _x;
 	int _y;
 	int[] _pixels;
 
 	public MacroBlock(int[] array, int x, int y) {
-		for (int i = 0; i < Size*Size; i++) {
+		_pixels = new int[SIZE*SIZE];
+		for (int i = 0; i < SIZE*SIZE; i++) {
 			_pixels[i] = array[x+y*Video.HEIGHT];
 		}
 		_x = x;

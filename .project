@@ -14,4 +14,31 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>Final</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Final/.DS_Store</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Final/.DS_Store</locationURI>
+		</link>
+		<link>
+			<name>Final/Video-SegmentationCompression.docx</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Final/Video-SegmentationCompression.docx</locationURI>
+		</link>
+		<link>
+			<name>Final/oneperson_960_540.rgb</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Final/oneperson_960_540.rgb</locationURI>
+		</link>
+		<link>
+			<name>Final/~$deo-SegmentationCompression.docx</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Final/~$deo-SegmentationCompression.docx</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
