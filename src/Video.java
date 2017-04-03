@@ -62,7 +62,7 @@ public class Video {
 			return bytes;
 		}
 		public static void main(String[] args) {
-			String testFile = "/Users/shane/Documents/workspace/MyCompression/images/image1.rgb";
+			String testFile = "/Users/shane/Documents/workspace/SGCS_570_Final_Proj/Final/oneperson_960_540.rgb";
 			Video testVideo = new Video(testFile);
 			System.out.println("Done");
 		}
