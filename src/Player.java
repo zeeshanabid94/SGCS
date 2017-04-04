@@ -70,7 +70,7 @@ public class Player {
 	
 	public static void main(String args[]) throws Exception {
 		Player player = new Player();
-		Video video = new Video("/Users/student/Desktop/Final/oneperson_960_540.rgb");
+		Video video = new Video("/Users/shane/Documents/workspace/SGCS_570_Final_Proj/Final/oneperson_960_540.rgb");
 		player.setVideo(video);
 		player.Play();
 		while(true);

@@ -32,7 +32,6 @@ public class Video {
 							index++;
 				  }
 				  frames[frameIndex] = singleFrame;
-				  System.out.println(frameIndex);
 			  }
 		  _currentFrame = 0;
 	  }
@@ -67,6 +66,8 @@ public class Video {
 		
 		public Frame getNextFrame() {
 			_currentFrame += 1;
+			if (_currentFrame >= 363)
+				_currentFrame = 1;
 			return frames[_currentFrame-1];
 		}
 		public static void main(String[] args) {
