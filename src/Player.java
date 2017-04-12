@@ -70,7 +70,16 @@ public class Player {
 	
 	public static void main(String args[]) throws Exception {
 		Player player = new Player();
-		Video video = new Video("/Users/shane/Documents/workspace/SGCS_570_Final_Proj/Final/oneperson_960_540.rgb");
+		//"/Users/shane/Documents/workspace/SGCS_570_Final_Proj/Final/oneperson_960_540.rgb"
+		String file = args[0];
+		int width, height;
+		width = 960;
+		height = 540;
+		if(args.length > 1) {
+			width = Integer.parseInt(args[1]);
+			height = Integer.parseInt(args[2]);
+		}
+		Video video = new Video(file, width, height);
 		player.setVideo(video);
 		player.Play();
 		while(true);

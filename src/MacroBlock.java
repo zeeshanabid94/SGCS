@@ -6,10 +6,7 @@ public class MacroBlock {
 	int[] _pixels;
 
 	public MacroBlock(int[] array, int x, int y) {
-		_pixels = new int[SIZE*SIZE];
-		for (int i = 0; i < SIZE*SIZE; i++) {
-			_pixels[i] = array[x+y*Video.HEIGHT];
-		}
+		_pixels = array;
 		_x = x;
 		_y = y;
 	}
