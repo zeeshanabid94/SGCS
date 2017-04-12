@@ -1,12 +1,19 @@
+import java.awt.image.BufferedImage;
 
 public class MacroBlock {
 	static int SIZE = 16;
 	int _x;
 	int _y;
-	int[] _pixels;
+	BufferedImage block;
+	
+	public MacroBlock() {
+		_x = 0;
+		_y = 0;
+		block = new BufferedImage(0,0,1);
+	}
 
-	public MacroBlock(int[] array, int x, int y) {
-		_pixels = array;
+	public MacroBlock(int x, int y) {
+		block = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_RGB);
 		_x = x;
 		_y = y;
 	}
@@ -19,7 +26,11 @@ public class MacroBlock {
 		return _y;
 	}
 
-	public int[] getPixels() {
-		return _pixels;
+	public BufferedImage getPixels() {
+		return block;
+	}
+	
+	public void setPixel(int x, int y, int pixel) {
+		block.setRGB(x, y, pixel);
 	}
 }

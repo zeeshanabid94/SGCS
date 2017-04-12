@@ -1,16 +1,18 @@
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Frame {
-	MacroBlock[] _macroblocks;
+	ArrayList<MacroBlock> _macroblocks;
 	BufferedImage image;
 	int width;
 	int height;
 	int macroblockSize = 16;
 	int wPadding;
 	int hPadding;
+	
 	public Frame() {
 		image = null;
-		_macroblocks = new MacroBlock[2025];
+//		_macroblocks = new MacroBlock[2025];
 	}
 	  
 	public Frame(int w, int h, int wpadding, int hpadding) {
@@ -21,36 +23,35 @@ public class Frame {
 		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		int hMacro = height/16;
 		int wMacro = width/16;
-		_macroblocks = new MacroBlock[hMacro * wMacro];
+		_macroblocks = new ArrayList<>(hMacro * wMacro);
 //
-//		int x = 0;
-//		int y = 0;
-//		
-//		for (int i = 0; i < _macroblocks.length; i++) {
-//			int[] pixels = new int[macroblockSize*macroblockSize];
-//			int ptrx = x;
-//			int ptry = y;
-//			for (int j = 0; j < macroblockSize*macroblockSize; j++) {
-//				pixels[i] = imageBytes[ptrx+ptry*height];
-//				ptrx++;
-//				if (ptrx >= x+16) {
-//					ptry++;
-//					ptrx = x;
-//				}
-//			}
-//			_macroblocks[i] = new MacroBlock(imageBytes, x, y);
-//			x+= 16;
-//			if (x >= width) {
-//				x = 0;
-//				y += 16;
-//			}
-//		}
+		int x = 0;
+		int y = 0;
+		
+		for (int i = 0; i < hMacro * wMacro; i++) {
+			_macroblocks.add(new MacroBlock(x, y));
+			x+= 16;
+			if (x >= width) {
+				x = 0;
+				y += 16;
+			}
+		}
 	}
 	
 	public void setPixel(int x, int y, int pixel) {
 		x += wPadding/2;
 		y += hPadding/2;
 		image.setRGB(x, y, pixel);
+		int macroBlockX = x / 16;
+		int macroBlockY = y / 16;
+		int wMacro = width/16;
+		int macroIndex = macroBlockY * wMacro + macroBlockX;
+		MacroBlock macroblock = _macroblocks.get(macroIndex);
+		macroblock.setPixel(x-macroblock.getX(), y - macroblock.getY(), pixel);
+	}
+	
+	public void setImage(int[] Frame) {
+		
 	}
 
 	
@@ -62,9 +63,12 @@ public class Frame {
 		BufferedImage frame = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		
 		for (MacroBlock block : _macroblocks) {
-			for (int i = 0; i < macroblockSize * macroblockSize; i++) {
-				int pixel = 0x00000000 | ( block.getPixels()[i] << 16) | (block.getPixels()[i + height * width] << 8) | (block.getPixels()[i + height * width * 2]);
-				frame.setRGB((block.getX()+i)%width, (block.getY()+i)/width, pixel);
+				BufferedImage blockImage = block.getPixels();
+				for (int y = 0; y < 16; y++) {
+					for (int x = 0; x < 16; x++) {
+						int pixel = blockImage.getRGB(x, y);
+						frame.setRGB(block.getX() + x, block.getY() + y, pixel);
+					}
 			}
 		}
 		

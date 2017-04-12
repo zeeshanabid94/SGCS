@@ -25,8 +25,8 @@ public class Video {
 		  frames = new Frame[(int) totalFrames];
 		  
 		  // create an empty frame of size whatever we need with padding
-		  int widthPadding = WIDTH - (WIDTH / MacroBlock.SIZE) * 16;
-		  int heightPadding =HEIGHT - (HEIGHT/ MacroBlock.SIZE * 16);
+		  int widthPadding = (16 - (WIDTH - (WIDTH / MacroBlock.SIZE) * 16)) % 16;
+		  int heightPadding =(16 - (HEIGHT - (HEIGHT/ MacroBlock.SIZE)* 16)) % 16;
 		  
 		  int unpaddedWidth = WIDTH;
 		  int unpaddedHeight = HEIGHT;
