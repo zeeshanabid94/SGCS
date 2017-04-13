@@ -1,6 +1,7 @@
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -61,10 +62,14 @@ public class Player {
 			throw new Exception("No video found");
 		}
 		
+		
+		BGS BFSeparation = new BGS(_video);
+		BFSeparation.CalculateMotionVectors();
 		_play = true;
 		while(_play == true) {
 			Frame newFrame = _video.getNextFrame();
-			_videoWindow.setIcon(new ImageIcon(newFrame.getFrameImage()));
+			TimeUnit.MILLISECONDS.sleep(33);
+			_videoWindow.setIcon(new ImageIcon(newFrame.constructImageFromMacroblocks()));
 		}
 	}
 	

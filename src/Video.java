@@ -59,51 +59,7 @@ public class Video {
 		  
 		  // copy over the frame into the empty frame
 		  // save the frame
-		  
-//			  for(int frameIndex = 0; frameIndex < totalFrames; frameIndex++){
-//				  int index = 3*WIDTH*HEIGHT*frameIndex;
-//				  byte[] Frame = ReadFrameFromFile(inputFile, index, 3*HEIGHT*WIDTH);
-//				  if (Frame == null)
-//					  break;
-//				  int widthPadding = 16 - (WIDTH % MacroBlock.SIZE);
-//				  int heightPadding = 16 - (HEIGHT % MacroBlock.SIZE);
-//				  Frame singleFrame = new Frame(WIDTH+widthPadding, HEIGHT+heightPadding);
-//				  int widthPaddingLeft = widthPadding/2;
-//				  int widthPaddingRight = widthPadding - widthPaddingLeft;
-//				  int heightPaddingTop = heightPadding/2;
-//				  int heightPaddingBottom = heightPadding - heightPaddingTop;
-//				  int lastPositionTopPadding = 0;
-//				  while(heightPaddingTop != 0) {
-//					  for(int paddedPxls = 0; paddedPxls < singleFrame.width; paddedPxls++){
-//						  singleFrame.imageBytes[lastPositionTopPadding] =0;
-//						  singleFrame.imageBytes[lastPositionTopPadding+singleFrame.height*singleFrame.width] =0;
-//						  singleFrame.imageBytes[lastPositionTopPadding+singleFrame.height*singleFrame.width*2] =0;  
-//						  lastPositionTopPadding++;
-//					  }
-//					  heightPaddingTop--;
-//				  }
-//				  while(widthPaddingLeft !=0) {
-//					  for(int paddedPxls = 0; paddedPxls < singleFrame.width; paddedPxls++){
-//						  singleFrame.imageBytes[lastPositionTopPadding] =0;
-//						  singleFrame.imageBytes[lastPositionTopPadding+singleFrame.height*singleFrame.width] =0;
-//						  singleFrame.imageBytes[lastPositionTopPadding+singleFrame.height*singleFrame.width*2] =0;  
-//						  lastPositionTopPadding++;
-//					  }
-//					  widthPaddingLeft--;
-//				  }
-//				  }
-//				  for (int i = 0; i < WIDTH*HEIGHT;i++) {
-//							byte red = Frame[i];
-//							byte green = Frame[i+HEIGHT*WIDTH];
-//							byte blue = Frame[i+HEIGHT*WIDTH*2]; 
-//							singleFrame.imageBytes[i] = red & 0xff;
-//							singleFrame.imageBytes[i+HEIGHT*WIDTH] = green & 0xff;
-//							singleFrame.imageBytes[i+HEIGHT*WIDTH*2] = blue & 0xff;
-//							index++;
-//				  }
-//				  frames[frameIndex] = singleFrame;
-//			  }
-//		  _currentFrame = 0;
+
 	  }
 	  
 	  public Frame getFrame(int frameNumber) {
@@ -140,6 +96,13 @@ public class Video {
 				_currentFrame = 1;
 			return frames[_currentFrame-1];
 		}
+		
+		public int getTotalFrames() {
+			return totalFrames;
+		}
+		
+
+		
 		public static void main(String[] args) {
 			
 			String testFile = "/Users/student/Desktop/Final/oneperson_960_540.rgb";
