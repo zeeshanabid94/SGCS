@@ -36,6 +36,29 @@ public class Frame {
 				y += 16;
 			}
 		}
+		
+		for (int i = 0; i < _macroblocks.size(); i++) {
+			MacroBlock block = _macroblocks.get(i);
+			if (i - wMacro - 1 >= 0) {
+				block.addNeighbour(_macroblocks.get(i-wMacro-1));
+			}
+			if (i - wMacro >= 0) {
+				block.addNeighbour(_macroblocks.get(i-wMacro));
+				block.addNeighbour(_macroblocks.get(i-wMacro+1));
+			}
+			if (i + wMacro < hMacro*wMacro) {
+				block.addNeighbour(_macroblocks.get(i+wMacro));
+				block.addNeighbour(_macroblocks.get(i+wMacro-1));
+			}
+			
+			if (i + wMacro + 1 < hMacro*wMacro) {
+				block.addNeighbour(_macroblocks.get(i+wMacro+1));
+			}
+			if (i - 1 >= 0)
+				block.addNeighbour(_macroblocks.get(i-1));
+			if (i + 1 < hMacro*wMacro)
+				block.addNeighbour(_macroblocks.get(i+1));
+		}
 	}
 	
 	public void setPixel(int x, int y, int pixel) {
@@ -50,14 +73,14 @@ public class Frame {
 		macroblock.setPixel(x-macroblock.getX(), y - macroblock.getY(), pixel);
 	}
 	
-	public void setImage(int[] Frame) {
-		
-	}
 
 	
 	public BufferedImage getFrameImage() {
 		return image;
 	}
+	
+
+	
 	
 	public BufferedImage constructImageFromMacroblocks() {
 		BufferedImage frame = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -73,5 +96,23 @@ public class Frame {
 		}
 		
 		return frame;
+	}
+	
+	public int getPixel(int x, int y) {
+		return image.getRGB(x, y);
+	}
+	
+	
+	
+	public ArrayList<MacroBlock> getMacroBlocks() {
+		return _macroblocks;
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
 	}
 }

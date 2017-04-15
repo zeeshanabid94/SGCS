@@ -1,4 +1,8 @@
 /Frame.class
 /MacroBlock.class
-/Video.class
 /Player.class
+/Video.class
+/DCT.class
+/.DS_Store
+/BGS.class
+/Vector2D.class

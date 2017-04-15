@@ -79,11 +79,6 @@ public class DCT
     public int COLS     = 240;
 
     /**
-     * The ZigZag matrix.
-     */
-    public int zigZag[][] = new int[64][2];
-
-    /**
      * Cosine matrix. N * N.
      */
     public double c[][]        = new double[N][N];
