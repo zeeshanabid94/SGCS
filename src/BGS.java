@@ -61,12 +61,12 @@ public class BGS {
 			}
 			avg/=(double)currentFrame.getMacroBlocks().size();
 			for (MacroBlock block: currentFrame.getMacroBlocks()) {
-				block.setThreshold(avg*20);
+				block.setThreshold(avg*15);
 
 				block.isBackGround();
 			}
 			
-			System.out.println(avg*20);
+			System.out.println(avg*15);
 			
 
 			

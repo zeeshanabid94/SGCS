@@ -2,6 +2,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class MacroBlock {
+	public enum Type{
+		BACKGROUND, FOREGROUND, UNDEFINED
+	}
 	static int SIZE = 16;
 	int _x;
 	int _y;
@@ -9,6 +12,7 @@ public class MacroBlock {
 	Vector2D _motionVector;
 	ArrayList<MacroBlock> _neighbours;
 	double _threshold;
+	Type _type;
 
 	
 	public MacroBlock() {
@@ -18,6 +22,7 @@ public class MacroBlock {
 		_motionVector = null;
 		_neighbours = null;
 		_threshold = 0;
+		_type = Type.UNDEFINED;
 		}
 
 	public MacroBlock(int x, int y) {
@@ -27,6 +32,7 @@ public class MacroBlock {
 		_motionVector = null;
 		_neighbours = new ArrayList<>();
 		_threshold = 0;
+		_type = Type.UNDEFINED;
 	}
 
 	public int getX() {
@@ -75,8 +81,30 @@ public class MacroBlock {
 		_threshold = threshold;
 	}
 	public void isBackGround() {
-		if (_motionVector.length() > _threshold)
-			if (areNeighboursMoving())
-				block = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_RGB);
+		if (_motionVector.length() > _threshold) {
+			_type = Type.UNDEFINED;
+//				block = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_RGB);
+		}
+	}
+	
+	public BufferedImage getDCTBlock(int x, int y) {
+		BufferedImage DCTBlock = new BufferedImage(8,8,BufferedImage.TYPE_INT_RGB);
+		int DCTx = 0;
+		int DCTy = 0;
+		for (int i = y; i < y+8; i++) {
+			for (int j = x; j < x+8; j++) {
+				DCTBlock.setRGB(DCTx, DCTy, block.getRGB(j, i));
+				DCTx++;
+				if (DCTx >= 8) {
+					DCTy++;
+					DCTx = 0;
+				}
+			}
+		}
+		return DCTBlock;
+	}
+	
+	public Type getType() {
+		return _type;
 	}
 }
