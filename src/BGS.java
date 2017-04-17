@@ -13,7 +13,7 @@ public class BGS {
 	public BGS(Video video) {
 		_video = video;
 		_motionVectors = new ArrayList<Vector2D>();
-		_k = 3;
+		_k = 4;
 	}
 
 	public void setK(int K) {
@@ -32,28 +32,61 @@ public class BGS {
 				int minSad = Integer.MAX_VALUE;
 				int minSadX = 0;
 				int minSadY = 0;
-				for(int dx = _k; dx >= -1*_k; dx--) {
-					for (int dy = _k; dy >= -1*_k; dy--) {
-						int x = block.getX() + dx;
-						int y = block.getY() + dy;
-						
-						if (x < 0)
-							continue;
-						if (y < 0)
-							continue;
-						if (x + 16 > currentFrame.getWidth())
-							continue;
-						if (y + 16 > currentFrame.getHeight())
-							continue;
-						int Sad = CalculateSAD(block, nextFrame, x, y);
-						
-						if (Sad < minSad) {
-							minSad = Sad;
-							minSadX = x;
-							minSadY = y;
+				int currentK = _k;
+				int searchX = block.getX();
+				int searchY = block.getY();
+				while (currentK > 1) {
+					for (int dx = currentK; dx >= -1*currentK; dx-=currentK) {
+						for (int dy = currentK; dy >= -1*currentK; dy-=currentK) {
+							int x = searchX + dx;
+							int y = searchY + dy;
+							
+							if (x < 0)
+								continue;
+							if (y < 0)
+								continue;
+							if (x + 16 > currentFrame.getWidth())
+								continue;
+							if (y + 16 > currentFrame.getHeight())
+								continue;
+							int Sad = CalculateSAD(block, nextFrame, x, y);
+							
+							if (Sad < minSad) {
+								minSad = Sad;
+								minSadX = x;
+								minSadY = y;
+							}
+							
 						}
 					}
+
+					searchX = minSadX;
+					searchY = minSadY;
+					currentK/=2;
+						
 				}
+//				for(int dx = _k; dx >= -1*_k; dx--) {
+//					for (int dy = _k; dy >= -1*_k; dy--) {
+//						int x = block.getX() + dx;
+//						int y = block.getY() + dy;
+//						
+//						if (x < 0)
+//							continue;
+//						if (y < 0)
+//							continue;
+//						if (x + 16 > currentFrame.getWidth())
+//							continue;
+//						if (y + 16 > currentFrame.getHeight())
+//							continue;
+//						int Sad = CalculateSAD(block, nextFrame, x, y);
+//						
+//						if (Sad < minSad) {
+//							minSad = Sad;
+//							minSadX = x;
+//							minSadY = y;
+//						}
+//					}
+//				}
 				
 				Vector2D motionVector = new Vector2D(minSadX-block.getX(), minSadY - block.getY());
 				block.setMotionVector(motionVector);
@@ -77,19 +110,19 @@ public class BGS {
 	
 	public int CalculateSAD(MacroBlock block, Frame nextFrame, int x, int y) {
 		int Sad = 0;
-		
 		for (int i = 0; i < 16; i++) {
 			for (int j = 0; j < 16; j++) {
 				Color currentRGB = new Color(block.getPixel(j, i));
 				Color newRGB = new Color(nextFrame.getPixel(x+j, y+i));
-				
-				double currentIntensity = Math.sqrt(Math.pow(currentRGB.getRed(), 2) + Math.pow(currentRGB.getGreen(), 2) +
-						Math.pow(currentRGB.getGreen(), 2));
-				double newIntensity = Math.sqrt(Math.pow(newRGB.getRed(), 2) + Math.pow(newRGB.getGreen(), 2) +
-						Math.pow(newRGB.getGreen(), 2));
+				double currentY = 0.299*currentRGB.getRed() + 0.587*currentRGB.getGreen() + 0.114 *currentRGB.getBlue();
+				double newY = 0.299*newRGB.getRed() + 0.587*newRGB.getGreen() + 0.114 *newRGB.getBlue();
+//				double currentIntensity = Math.sqrt(Math.pow(currentRGB.getRed(), 2) + Math.pow(currentRGB.getGreen(), 2) +
+//						Math.pow(currentRGB.getBlue(), 2));
+//				double newIntensity = Math.sqrt(Math.pow(newRGB.getRed(), 2) + Math.pow(newRGB.getGreen(), 2) +
+//						Math.pow(newRGB.getBlue(), 2));
 //				Sad += Math.abs(currentRGB.getRed() - newRGB.getRed()) + Math.abs(currentRGB.getBlue() - newRGB.getBlue())
 //						+ Math.abs(currentRGB.getGreen() - newRGB.getGreen());
-				Sad += Math.abs(currentIntensity - newIntensity);
+				Sad += Math.abs(currentY - newY);
 			}
 		}
 		
