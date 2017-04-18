@@ -61,18 +61,22 @@ public class Player {
 		if (_video == null) {
 			throw new Exception("No video found");
 		}
-		String fileoutpath = "C:/Users/zabid/Desktop/compressed.cmp";
-		Encoder encoded = new Encoder(_video, fileoutpath);
-		encoded.WriteOutputFile();
+		String fileoutpath = "/Users/shane/Desktop/compressed.cmp";
+//		Encoder encoded = new Encoder(_video, fileoutpath);
+//		encoded.WriteOutputFile();
 		
+		Decoder decoded = new Decoder(fileoutpath);
+		decoded.DecodeFrames();
+		_video = decoded;
 //		BGS BFSeparation = new BGS(_video);
 //		BFSeparation.CalculateMotionVectors();
 //		_play = true;
-//		while(_play == true) {
-//			Frame newFrame = _video.getNextFrame();
-//			TimeUnit.MILLISECONDS.sleep(33);
-//			_videoWindow.setIcon(new ImageIcon(newFrame.constructImageFromMacroblocks()));
-//		}
+		while(_play == true) {
+			System.out.println("Playing");
+			Frame newFrame = _video.getNextFrame();
+			TimeUnit.MILLISECONDS.sleep(33);
+			_videoWindow.setIcon(new ImageIcon(newFrame.constructImageFromMacroblocks()));
+		}
 	}
 	
 	public static void main(String args[]) throws Exception {

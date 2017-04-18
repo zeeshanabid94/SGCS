@@ -21,7 +21,7 @@ public class Encoder {
 		
 		FileOutputStream fout = new FileOutputStream(_outputFile);
 		
-		for (int i = 0; i < _video.getTotalFrames(); i++) {
+		for (int i = 0; i < 1; i++) {
 			for (MacroBlock block: _video.getFrame(i).getMacroBlocks()) {
 				for (int y = 0; y < 16; y+=8) {
 					for (int x = 0; x < 16; x+=8) {
@@ -42,12 +42,29 @@ public class Encoder {
 							}
 						}
 						
+						encodedLine+= "\n";
+						
+						if (block.getType() == MacroBlock.Type.BACKGROUND) {
+							encodedLine += "1 ";
+						} else {
+							encodedLine += "0 ";
+						}
+						
+						
+						
 						int[][] greenDCTinfo = _dct.forwardDCT(block.getDCTBlock(x,y), "green");
 
 						for (int a = 0; a < 8; a++) {
 							for (int b = 0; b < 8; b++) {
 								encodedLine += greenDCTinfo[a][b] + " ";
 							}
+						}
+						encodedLine+= "\n";
+						
+						if (block.getType() == MacroBlock.Type.BACKGROUND) {
+							encodedLine += "1 ";
+						} else {
+							encodedLine += "0 ";
 						}
 						
 						int[][] blueDCTinfo = _dct.forwardDCT(block.getDCTBlock(x,y), "blue");

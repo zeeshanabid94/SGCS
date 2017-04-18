@@ -8,3 +8,7 @@
 /Vector2D.class
 /Encoder.class
 /MacroBlock$Type.class
+/EncodedFrame.class
+/EncodedMacroBlocks.class
+/Decoder.class
+/EncodedMacroBlock.class

@@ -8,63 +8,29 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 
-public class Decoder {
+public class Decoder extends Video {
 	File _file;
 	
 	public Decoder(String encodedFilePath) {
+		super(960, 544);
 		_file = new File(encodedFilePath);
 	}
 	
-	public BufferedImage DecodeFrame() throws IOException {
+	public void DecodeFrames() throws IOException {
 		BufferedReader fin = new BufferedReader(new FileReader(_file));
-		DCT iDCT = new DCT(0);
-		Frame frame = new Frame(960, 544, 0, 0);
-		BufferedImage image = null;
 		
 		while(fin.ready()) {
-			String line = fin.readLine();
-			String[] coeffs = line.split(" ");
-			
-			int[][] DCTcoeffs = new int[8][8];
-			int ptr = 1;
-			for (int i = 0; i < 64; i++) {
-				DCTcoeffs[i%8][i/8] = Integer.parseInt(coeffs[ptr]);
-				ptr++;
+			String input = "";
+			for (int i = 0; i < 24480; i++) {
+				String readLine = fin.readLine();
+				input +=readLine+ "\n";
 			}
-			int[][] rBlock = iDCT.inverseDCT(DCTcoeffs);
-			
-			line = fin.readLine();
-			coeffs = line.split(" ");
-			
-			DCTcoeffs = new int[8][8];
-			for (int i = 0; i < 64; i++) {
-				DCTcoeffs[i%8][i/8] = Integer.parseInt(coeffs[ptr]);
-				ptr++;
-			}
-			int[][] gBlock = iDCT.inverseDCT(DCTcoeffs);
-			
-			line = fin.readLine();
-			coeffs = line.split(" ");
-			
-			DCTcoeffs = new int[8][8];
-			for (int i = 0; i < 64; i++) {
-				DCTcoeffs[i%8][i/8] = Integer.parseInt(coeffs[ptr]);
-				ptr++;
-			}
-			int[][] bBlock = iDCT.inverseDCT(DCTcoeffs);
-		
-			image = new BufferedImage(8,8, BufferedImage.TYPE_INT_RGB);
-
-			for (int i = 0; i < 8; i++) {
-				for (int j = 0; j < 8; j++) {
-					Color color = new Color(rBlock[j][i], gBlock[j][i], bBlock[j][i]);
-					image.setRGB(j, i, color.getRGB());
-				}
-			}
+			EncodedFrame eFrame = new EncodedFrame(input, WIDTH, HEIGHT);
+			this.frames.add(eFrame);
+			this.totalFrames = frames.size();
 		}
-		
-		return image;
 
 		
 

@@ -3,14 +3,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class Video {
 	  int WIDTH;
 	  int HEIGHT;
 	  int totalFrames;
-	  Frame[] frames;
+	  ArrayList<Frame> frames;
 	  int _currentFrame;
 	  
+	  public Video(int width, int height) {
+		  WIDTH = width;
+		  HEIGHT = height;
+		  totalFrames = 0;
+		  frames = new ArrayList<Frame>();
+		  _currentFrame = 0;
+	  }
 	  public Video(String filename, int width, int height) {
 		  if(width > 0 && height > 0) {
 			  WIDTH = width;
@@ -22,7 +30,7 @@ public class Video {
 		  File inputFile = new File(filename);
 		  long inputLength = inputFile.length();
 		  totalFrames = (int) inputLength/(WIDTH*HEIGHT*3);
-		  frames = new Frame[(int) totalFrames];
+		  frames = new ArrayList<Frame>();
 		  
 		  // create an empty frame of size whatever we need with padding
 		  int widthPadding = (16 - (WIDTH - (WIDTH / MacroBlock.SIZE) * 16)) % 16;
@@ -53,13 +61,13 @@ public class Video {
 					paddedFrame.setPixel(i%WIDTH, i/WIDTH, pixel);
 					index++;
 		  	}
-			  frames[frameIndex] = paddedFrame;
+			  frames.add(paddedFrame);
 			  
 		  }
 	  }
 	  
 	  public Frame getFrame(int frameNumber) {
-		  return frames[frameNumber];
+		  return frames.get(frameNumber);
 	  }
 	  
 		public byte[] ReadFrameFromFile(File file, int skip, int length) {
@@ -90,7 +98,7 @@ public class Video {
 			_currentFrame += 1;
 			if (_currentFrame >= 363)
 				_currentFrame = 1;
-			return frames[_currentFrame-1];
+			return frames.get(_currentFrame-1);
 		}
 		
 		public int getTotalFrames() {
