@@ -86,6 +86,7 @@ public class MacroBlock {
 //				block = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_RGB);
 		} else {
 			_type = Type.BACKGROUND;
+
 		}
 	}
 	
