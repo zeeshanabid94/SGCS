@@ -64,13 +64,13 @@ public class Player {
 		String fileoutpath = "/Users/shane/Desktop/compressed.cmp";
 //		Encoder encoded = new Encoder(_video, fileoutpath);
 //		encoded.WriteOutputFile();
-		
+//		
 		Decoder decoded = new Decoder(fileoutpath);
 		decoded.DecodeFrames();
 		_video = decoded;
 //		BGS BFSeparation = new BGS(_video);
 //		BFSeparation.CalculateMotionVectors();
-//		_play = true;
+		_play = true;
 		while(_play == true) {
 			System.out.println("Playing");
 			Frame newFrame = _video.getNextFrame();

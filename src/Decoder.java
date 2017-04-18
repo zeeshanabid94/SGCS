@@ -22,10 +22,10 @@ public class Decoder extends Video {
 		BufferedReader fin = new BufferedReader(new FileReader(_file));
 		
 		while(fin.ready()) {
-			String input = "";
+			StringBuffer input = new StringBuffer();
 			for (int i = 0; i < 24480; i++) {
 				String readLine = fin.readLine();
-				input +=readLine+ "\n";
+				input.append(readLine+ "\n");
 			}
 			EncodedFrame eFrame = new EncodedFrame(input, WIDTH, HEIGHT);
 			this.frames.add(eFrame);

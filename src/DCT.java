@@ -58,6 +58,16 @@ import java.io.*;
 // <pre> 
 public class DCT
 {
+	/**
+	 * Foreground Quantization
+	 */
+	public int ForegroundN;
+	
+	/**
+	 * Background Quantization
+	 */
+	
+	public int BackgroundN;
     /**
      * DCT Block Size - default 8
      */
@@ -108,9 +118,10 @@ public class DCT
      * @param QUALITY The quality of the image (0 best - 25 worst)
      *
      */
-    public DCT(int QUALITY)
+    public DCT(int QUALITY, int n1, int n2)
     {
-   
+    	ForegroundN = n1;
+    	BackgroundN = n2;
         initMatrix(QUALITY);
     }
 
@@ -325,8 +336,24 @@ public class DCT
 
         return bitSet;
     }
-    public static void main(String[] args) {
-    	DCT test = new DCT(0);
+    
+    public int[][] quantizeBlock(int[][] block, MacroBlock.Type Type) {
+    	if (Type == MacroBlock.Type.FOREGROUND) {
+	    	for (int i = 0; i < N; i++) {
+	    		for (int j = 0; j < N; j++) {
+	    			block[i][j] /= ForegroundN;
+	    			block[i][j] *= ForegroundN;
+	    		}
+	    	}
+    	} else {
+    		for (int i = 0; i < N; i++) {
+	    		for (int j = 0; j < N; j++) {
+	    			block[i][j] /= BackgroundN;
+	    			block[i][j] *= BackgroundN;
+	    		}
+	    	}
+    	}
+    	return block;
     }
 }
 

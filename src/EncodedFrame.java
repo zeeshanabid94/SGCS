@@ -1,9 +1,9 @@
 
 public class EncodedFrame extends Frame {
 	// Each Frame gets 24480 lines
-	public EncodedFrame(String input, int w, int h) {
+	public EncodedFrame(StringBuffer input, int w, int h) {
 		super(w,h,0,0);
-		String[] lines = input.split("\n");
+		String[] lines = input.toString().split("\n");
 		int x = 0, y = 0;
 		int mNo = 0;
 		for (int i = 0; i < lines.length; i+=12) {
@@ -13,7 +13,7 @@ public class EncodedFrame extends Frame {
 			}
 			
 			EncodedMacroBlock eMacro = new EncodedMacroBlock(macroblock, x, y);
-			
+			eMacro.decodeMacroBlock();
 			this._macroblocks.add(eMacro);
 			
 			x+=16;

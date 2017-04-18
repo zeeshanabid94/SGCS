@@ -96,7 +96,7 @@ public class Video {
 		
 		public Frame getNextFrame() {
 			_currentFrame += 1;
-			if (_currentFrame >= 363)
+			if (_currentFrame >= 10)
 				_currentFrame = 1;
 			return frames.get(_currentFrame-1);
 		}

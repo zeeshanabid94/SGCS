@@ -82,8 +82,10 @@ public class MacroBlock {
 	}
 	public void isBackGround() {
 		if (_motionVector.length() > _threshold) {
-			_type = Type.UNDEFINED;
+			_type = Type.FOREGROUND;
 //				block = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_RGB);
+		} else {
+			_type = Type.BACKGROUND;
 		}
 	}
 	

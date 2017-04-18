@@ -12,22 +12,22 @@ public class Encoder {
 	public Encoder(Video video, String outputFilePath) {
 		_video = video;
 		_bgs = new BGS(_video);
-		_dct = new DCT(0);
+		_dct = new DCT(0,1,1);
 		_outputFile = new File(outputFilePath);
 	}
 	
 	public void WriteOutputFile() throws IOException {
-		//_bgs.CalculateMotionVectors();
+		_bgs.CalculateMotionVectors();
 		
 		FileOutputStream fout = new FileOutputStream(_outputFile);
 		
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 10; i++) {
 			for (MacroBlock block: _video.getFrame(i).getMacroBlocks()) {
 				for (int y = 0; y < 16; y+=8) {
 					for (int x = 0; x < 16; x+=8) {
 						String encodedLine = "";
 							
-						if (block.getType() == MacroBlock.Type.BACKGROUND) {
+						if (block.getType() == MacroBlock.Type.FOREGROUND) {
 							encodedLine += "1 ";
 						} else {
 							encodedLine += "0 ";
