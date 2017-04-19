@@ -81,6 +81,7 @@ public class Encoder {
 						
 					}
 				}
+				fout.write("&\n".getBytes());
 			}
 			System.out.println("Frame " + i+ " compressed");
 		}

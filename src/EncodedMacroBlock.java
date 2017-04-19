@@ -1,11 +1,14 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.sql.Time;
 
 public class EncodedMacroBlock extends MacroBlock {
 	
 	
-	public EncodedMacroBlock(String input, int bx, int by, DCT iDCT) {
+	public EncodedMacroBlock(String input, int bx, int by, DCT iDCT, BufferedImage image) {
+
 		super(bx, by);
+
 		int[][] _rBlock = new int[16][16];
 		int[][] _gBlock = new int[16][16];
 		int[][] _bBlock = new int[16][16];
@@ -45,6 +48,7 @@ public class EncodedMacroBlock extends MacroBlock {
 			}
 		}		
 		block = new BufferedImage(16,16,BufferedImage.TYPE_INT_RGB);
+
 		for(int y =0; y < 16; y+=8) {
 			for(int x =0; x< 16; x+=8) {
 				for (int i = 0; i < 64; i++ ) {
@@ -55,17 +59,27 @@ public class EncodedMacroBlock extends MacroBlock {
 				rDCT = iDCT.quantizeBlock(rDCT, _type);
 				gDCT = iDCT.quantizeBlock(gDCT, _type);
 				bDCT = iDCT.quantizeBlock(bDCT, _type);
+				FastDCT fdct = new FastDCT();
 				int[][] rchannel = iDCT.inverseDCT(rDCT);
 				int[][] gchannel = iDCT.inverseDCT(gDCT);
 				int[][] bchannel = iDCT.inverseDCT(bDCT);
 				for (int i = 0; i < 64; i++ ) {
 					Color rgb = new Color(rchannel[i%8][i/8],gchannel[i%8][i/8],bchannel[i%8][i/8]);
-					block.setRGB(x + (i%8), y + (i/8), rgb.getRGB());
+					image.setRGB(bx +x + (i%8), by + y+(i/8), rgb.getRGB());
 				}
 			}
 		}
+
+	
 		}
 	
+	public void decodeRedChannel(String input, int x, int y) {
+		String[] rCoeff = input.split(" ");
+		rDCT[i/8][i%8] = _rBlock[(i/8) + y][(i%8) + x];
+		for(int i = 1; i < 65; i++) {
+			_rBlock[((i-1)/8) +dy][((i-1)%8) + dx] = Integer.parseInt(rCoeff[i]);
+		}
+	}
 	public void decodeMacroBlock() {
 		int dx = 0, dy = 0;
 		

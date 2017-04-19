@@ -61,13 +61,15 @@ public class Player {
 //		if (_video == null) {
 //			throw new Exception("No video found");
 //		}
-		String fileoutpath = "/Users/shane/Desktop/compressed.cmp";
+		String fileoutpath = "C:/Users/zabid/Desktop/compressed.cmp";
 //		Encoder encoded = new Encoder(_video, fileoutpath);
 //		encoded.WriteOutputFile();
-//		
-		Decoder decoded = new Decoder(fileoutpath);
-		decoded.DecodeFrames();
-		_video = decoded.getVideo();
+		FrameBuffer buffer = new FrameBuffer(30);
+		Decoder decoded = new Decoder(fileoutpath, buffer);
+		Thread decoderThread = new Thread(decoded);
+		decoderThread.start();
+//		decoded.DecodeFrames();
+//		_video = decoded.getVideo();
 //		BGS BFSeparation = new BGS(_video);
 //		BFSeparation.CalculateMotionVectors();
 
@@ -77,11 +79,12 @@ public class Player {
 		
 //		BGS BFSeparation = new BGS(_video);
 //		BFSeparation.CalculateMotionVectors();
+
+		TimeUnit.MILLISECONDS.sleep(1000);
 		_play = true;
 		while(_play == true) {
-			Frame newFrame = _video.getNextFrame();
-//			TimeUnit.MILLISECONDS.sleep(33);
-			_videoWindow.setIcon(new ImageIcon(newFrame.constructImageFromMacroblocks()));
+			Frame newFrame = buffer.getNextFrame();
+			_videoWindow.setIcon(new ImageIcon(newFrame.getFrameImage()));
 		}
 	}
 	
@@ -99,7 +102,6 @@ public class Player {
 //		Video video = new Video(file, width, height);
 //		player.setVideo(video);
 		player.Play();
-		while(true);
 	}
 
 }

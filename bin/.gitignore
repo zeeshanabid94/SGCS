@@ -12,3 +12,5 @@
 /EncodedMacroBlocks.class
 /Decoder.class
 /EncodedMacroBlock.class
+/FrameBuffer.class
+/FastDCT.class

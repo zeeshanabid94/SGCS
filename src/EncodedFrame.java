@@ -1,3 +1,4 @@
+import java.sql.Time;
 
 public class EncodedFrame extends Frame {
 	// Each Frame gets 24480 lines
@@ -9,9 +10,9 @@ public class EncodedFrame extends Frame {
 		_y = 0;
 	}
 	
-	public void addMacroBlock(StringBuilder macroblock, DCT iDCT) {
+	public void addMacroBlock(String macroblock, DCT iDCT) {
 
-		EncodedMacroBlock eMacro = new EncodedMacroBlock(macroblock.toString(), _x, _y, iDCT);
+		EncodedMacroBlock eMacro = new EncodedMacroBlock(macroblock, _x, _y, iDCT, this.image);
 		eMacro.decodeMacroBlock();
 		this._macroblocks.add(eMacro);
 		
@@ -21,5 +22,6 @@ public class EncodedFrame extends Frame {
 			_x=0;
 			_y+=16;
 		}
+
 	}
 }
