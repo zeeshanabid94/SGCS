@@ -21,7 +21,7 @@ public class Encoder {
 		
 		FileOutputStream fout = new FileOutputStream(_outputFile);
 		
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < _video.getTotalFrames(); i++) {
 			for (MacroBlock block: _video.getFrame(i).getMacroBlocks()) {
 				for (int y = 0; y < 16; y+=8) {
 					for (int x = 0; x < 16; x+=8) {

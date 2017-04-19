@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class Video {
-	  int WIDTH;
-	  int HEIGHT;
+	  public int WIDTH;
+	  public int HEIGHT;
 	  int totalFrames;
 	  ArrayList<Frame> frames;
 	  int _currentFrame;
@@ -96,7 +96,7 @@ public class Video {
 		
 		public Frame getNextFrame() {
 			_currentFrame += 1;
-			if (_currentFrame >= 10)
+			if (_currentFrame >= totalFrames)
 				_currentFrame = 1;
 			return frames.get(_currentFrame-1);
 		}

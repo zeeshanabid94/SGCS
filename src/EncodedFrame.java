@@ -1,29 +1,25 @@
 
 public class EncodedFrame extends Frame {
 	// Each Frame gets 24480 lines
-	public EncodedFrame(StringBuffer input, int w, int h) {
+	int _x = 0;
+	int _y = 0;
+	public EncodedFrame(int w, int h) {
 		super(w,h,0,0);
-		String[] lines = input.toString().split("\n");
-		int x = 0, y = 0;
-		int mNo = 0;
-		for (int i = 0; i < lines.length; i+=12) {
-			String macroblock = "";
-			for (int j = 0; j < 12; j++) {
-				macroblock += lines[i+j] + "\n";
-			}
-			
-			EncodedMacroBlock eMacro = new EncodedMacroBlock(macroblock, x, y);
-			eMacro.decodeMacroBlock();
-			this._macroblocks.add(eMacro);
-			
-			x+=16;
-			
-			if (x >= w) {
-				x=0;
-				y+=16;
-			}
-			System.out.println(mNo);
-			mNo++;
+		_x = 0;
+		_y = 0;
+	}
+	
+	public void addMacroBlock(StringBuilder macroblock, DCT iDCT) {
+
+		EncodedMacroBlock eMacro = new EncodedMacroBlock(macroblock.toString(), _x, _y, iDCT);
+		eMacro.decodeMacroBlock();
+		this._macroblocks.add(eMacro);
+		
+		_x+=16;
+		
+		if (_x >= width) {
+			_x=0;
+			_y+=16;
 		}
 	}
 }
