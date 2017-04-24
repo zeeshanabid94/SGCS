@@ -25,46 +25,45 @@ public class Player {
 		_play = false;
 		_mainWindow = new JFrame("Video Player");
 		_mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		_mainWindow.setSize(960, 600);
+		_mainWindow.setSize(960, 605);
 		JSplitPane splitPane = new JSplitPane();;
         JPanel topPanel = new JPanel();         // our top component
         JPanel bottomPanel = new JPanel();      // our bottom component
+        splitPane.setBorder(null);
         _mainWindow.getContentPane().add(splitPane);
-		GridBagConstraints c = new GridBagConstraints();
+		
 		JPanel panel2 = new JPanel(new GridBagLayout());
 		 splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);  // we want it to split the window verticaly
-		 splitPane.setDividerLocation(540);                    // the initial position of the divider is 200 (our window is 400 pixels high)
+		 splitPane.setDividerLocation(540);                    // the initial position of the divider is 200 (our window is 540 pixels high)
 		 splitPane.setTopComponent(topPanel);                  // at the top we want our "topPanel"
 		 splitPane.setBottomComponent(bottomPanel);            // and at the bottom we want our "bottomPanel"
 
 		JButton play = new JButton("Play");
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.ipady = 0;       //reset to default
-		c.weighty = 1.0;   //request any extra vertical space
-		c.anchor = GridBagConstraints.PAGE_END; //bottom of space
-//		c.insets = new Insets(10,0,0,0);  //top padding
-		c.gridx = 1;       //aligned with button 2
-		c.gridwidth = 2;   //2 columns wide
-		c.gridy = 2;       //third row
-		bottomPanel.add(play, c);
-////		
-////		c = new GridBagConstraints();
-////		JButton pause = new JButton("Pause");
-////		c.gridx = 1;
-////		c.gridy = 1;
-////		panel.add(pause, c);
-////		
-////		c = new GridBagConstraints();
-////		JButton stop = new JButton("Stop");
-////		c.gridx = 2;
-////		c.gridy = 1;
-////		panel.add(stop, c);
-//		
-		c = new GridBagConstraints();
-		_videoWindow = new JLabel();
-		c.fill = GridBagConstraints.HORIZONTAL;
+		GridBagConstraints cPlay = new GridBagConstraints();
+		cPlay.fill = GridBagConstraints.HORIZONTAL;
+		cPlay.gridx = 0;       
+		cPlay.gridy = 0;       
+		bottomPanel.add(play, cPlay);
+		
+		JButton pause = new JButton("Pause");
+		GridBagConstraints cPause = new GridBagConstraints();
+		cPause.fill = GridBagConstraints.HORIZONTAL;
+		cPause.gridx = 1; 
+		cPause.gridy = 0;
+		bottomPanel.add(pause, cPause);
+		
+		JButton stop = new JButton("Stop");
+		GridBagConstraints cStop = new GridBagConstraints();
+		cStop.fill = GridBagConstraints.HORIZONTAL;
+		cStop.gridx = 2; 
+		cStop.gridy = 0;
+		bottomPanel.add(stop, cStop);
 
-		topPanel.add(_videoWindow, c);
+		GridBagConstraints cVideo = new GridBagConstraints();
+		_videoWindow = new JLabel();
+		cVideo.fill = GridBagConstraints.HORIZONTAL;
+
+		topPanel.add(_videoWindow, cVideo);
 		
 		
 		_mainWindow.setVisible(true);
