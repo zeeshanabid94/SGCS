@@ -13,7 +13,7 @@ public class Encoder {
 		_video = video;
 		_bgs = new BGS(_video);
 		_dct = new DCT(0,1,1);
-		_outputFile = new File(outputFilePath);
+//		_outputFile = new File(outputFilePath);
 	}
 	
 	public void WriteOutputFile() throws IOException {

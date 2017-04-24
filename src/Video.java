@@ -109,7 +109,7 @@ public class Video {
 		
 		public static void main(String[] args) {
 			
-			String testFile = "/Users/student/Desktop/Final/oneperson_960_540.rgb";
+			String testFile = "/Users/shane/Documents/workspace/oneperson_960_540.rgb";
 			int width = 960;
 			int height = 540;
 			Video testVideo = new Video(testFile, width, height);

@@ -72,14 +72,14 @@ public class EncodedMacroBlock extends MacroBlock {
 
 	
 		}
-	
-	public void decodeRedChannel(String input, int x, int y) {
-		String[] rCoeff = input.split(" ");
-		rDCT[i/8][i%8] = _rBlock[(i/8) + y][(i%8) + x];
-		for(int i = 1; i < 65; i++) {
-			_rBlock[((i-1)/8) +dy][((i-1)%8) + dx] = Integer.parseInt(rCoeff[i]);
-		}
-	}
+//	
+//	public void decodeRedChannel(String input, int x, int y) {
+//		String[] rCoeff = input.split(" ");
+//		rDCT[i/8][i%8] = _rBlock[(i/8) + y][(i%8) + x];
+//		for(int i = 1; i < 65; i++) {
+//			_rBlock[((i-1)/8) +dy][((i-1)%8) + dx] = Integer.parseInt(rCoeff[i]);
+//		}
+//	}
 	public void decodeMacroBlock() {
 		int dx = 0, dy = 0;
 		
