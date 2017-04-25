@@ -101,6 +101,10 @@ public class Video {
 			return frames.get(_currentFrame-1);
 		}
 		
+		public void resetFrames() {
+			_currentFrame =1;
+		}
+		
 		public int getTotalFrames() {
 			return totalFrames;
 		}

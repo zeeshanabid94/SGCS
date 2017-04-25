@@ -1,6 +1,8 @@
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
@@ -18,11 +20,13 @@ public class Player {
 	Video _video;
 	JFrame _mainWindow;
 	JLabel _videoWindow;
-	boolean _play;
+	boolean _play,_pause,_stop;
 	
 	
 	public Player() {
 		_play = false;
+		_pause = false;
+		_stop = false;
 		_mainWindow = new JFrame("Video Player");
 		_mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		_mainWindow.setSize(960, 605);
@@ -38,12 +42,22 @@ public class Player {
 		 splitPane.setTopComponent(topPanel);                  // at the top we want our "topPanel"
 		 splitPane.setBottomComponent(bottomPanel);            // and at the bottom we want our "bottomPanel"
 
+//		 Thread controls = new Thread(new RunningThread());
+		 
 		JButton play = new JButton("Play");
 		GridBagConstraints cPlay = new GridBagConstraints();
 		cPlay.fill = GridBagConstraints.HORIZONTAL;
 		cPlay.gridx = 0;       
 		cPlay.gridy = 0;       
 		bottomPanel.add(play, cPlay);
+		play.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)   {
+				_play = true;
+				_pause = false;
+				_stop = false;
+				
+			  }
+			});
 		
 		JButton pause = new JButton("Pause");
 		GridBagConstraints cPause = new GridBagConstraints();
@@ -51,6 +65,13 @@ public class Player {
 		cPause.gridx = 1; 
 		cPause.gridy = 0;
 		bottomPanel.add(pause, cPause);
+		pause.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)   {
+				_pause = true;
+				_stop = false;
+				_play = false;
+			  }
+			});
 		
 		JButton stop = new JButton("Stop");
 		GridBagConstraints cStop = new GridBagConstraints();
@@ -58,6 +79,14 @@ public class Player {
 		cStop.gridx = 2; 
 		cStop.gridy = 0;
 		bottomPanel.add(stop, cStop);
+		//when stop button is clicked set stop to true
+		stop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)   {
+			  _stop = true;
+			  _play = false;
+			  _pause = false;
+			  }
+			});
 
 		GridBagConstraints cVideo = new GridBagConstraints();
 		_videoWindow = new JLabel();
@@ -77,8 +106,8 @@ public class Player {
 //		if (_video == null) {
 //			throw new Exception("No video found");
 //		}
-//		String fileoutpath = "/Users/shane/Desktop/compressed.cmp";
-		Encoder encoded = new Encoder(_video, "");
+		String fileoutpath = "/Users/shane/Desktop/compressed.cmp";
+		Encoder encoded = new Encoder(_video, fileoutpath);
 //		encoded.WriteOutputFile();
 //		FrameBuffer buffer = new FrameBuffer(30);
 //		Decoder decoded = new Decoder(fileoutpath, buffer);
@@ -96,11 +125,19 @@ public class Player {
 //		BGS BFSeparation = new BGS(_video);
 //		BFSeparation.CalculateMotionVectors();
 
-//		TimeUnit.MILLISECONDS.sleep(1000);
+//		
+		
 		_play = true;
-		while(_play == true) {
-			Frame newFrame = _video.getNextFrame();
-			_videoWindow.setIcon(new ImageIcon(newFrame.getFrameImage()));
+		while(true) {
+			while(_play == true) {
+				Frame newFrame = _video.getNextFrame();
+				_videoWindow.setIcon(new ImageIcon(newFrame.getFrameImage()));
+			}
+			if(_stop == true) {
+				_video.resetFrames();
+			}
+			TimeUnit.MILLISECONDS.sleep(1); //sleep so thread can see updated values
+			
 		}
 	}
 	
