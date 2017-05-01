@@ -92,7 +92,7 @@ public class MacroBlock {
 		_tY = y;
 	}
 	public void isBackGround() {
-		if (Math.abs(_motionVector.getX()) >= _tX) {
+		if (_motionVector.length() > _threshold) {
 			_type = Type.UNDEFINED;
 			block = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_RGB);
 		}

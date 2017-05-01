@@ -8,7 +8,7 @@ public class Encoder {
 	BGS _bgs;
 	DCT _dct;
 	File _outputFile;
-	
+	 
 	public Encoder(Video video, String outputFilePath) {
 		_video = video;
 		_bgs = new BGS(_video);

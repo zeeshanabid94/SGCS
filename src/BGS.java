@@ -13,7 +13,7 @@ public class BGS {
 	public BGS(Video video) {
 		_video = video;
 		_motionVectors = new ArrayList<Vector2D>();
-		_k = 8;
+		_k = 4;
 	}
 
 	public void setK(int K) {
@@ -27,10 +27,13 @@ public class BGS {
 			double avg = 0;
 			double avgY = 0;
 			double avgX = 0;
+			double largestX = 0;
+			double largestY = 0;
+			Vector2D largestVector = new Vector2D(0,0);
 			int nonzeromv = 0;
 			Frame currentFrame = _video.getFrame(i);
 			Frame nextFrame = _video.getFrame(i+1);
-			
+
 			for (MacroBlock block: currentFrame.getMacroBlocks()) {
 				int minSad = Integer.MAX_VALUE;
 				int minSadX = 0;
@@ -71,26 +74,37 @@ public class BGS {
 				
 				Vector2D motionVector = new Vector2D(minSadX-block.getX(), minSadY - block.getY());
 				block.setMotionVector(motionVector);
-				if (Math.abs(motionVector.length()) > 2)
-					nonzeromv += 1;
-				avg += motionVector.length();
-				avgX += Math.abs(motionVector.getX());
-				avgY += Math.abs(motionVector.getY());
-			}
-			avg/=(double)currentFrame.getMacroBlocks().size();
-			avgX/=(double)currentFrame.getMacroBlocks().size();
-			avgY/=(double)currentFrame.getMacroBlocks().size();
-			for (MacroBlock block: currentFrame.getMacroBlocks()) {
-				if (nonzeromv > currentFrame.getMacroBlocks().size()/2)
-					block._motionVector.add(new Vector2D(avgX, avgY));
-				block.setThreshold(avgX, avgY);
 
+				avg += motionVector.length();
+				avgX += motionVector.getX();
+				avgY += motionVector.getY();
+			}
+
+			avg/=(double)2040;
+			avgX/=(double)2040;
+			avgY/=(double)2040;
+			for (MacroBlock block : currentFrame.getMacroBlocks()) {
+				if (block._motionVector.length() >= avg && block._motionVector.length() > 1) {
+					nonzeromv += 1;
+					if (largestVector.length() < block._motionVector.length()) {
+						largestVector = block._motionVector;
+					}
+				}
+			}
+			for (MacroBlock block: currentFrame.getMacroBlocks()) {
+				if (nonzeromv > currentFrame.getMacroBlocks().size()/2) {
+					block._motionVector.add(new Vector2D(-1*avgX, -1*avgY));
+				}
+//				block.setThreshold(Math.abs(avgX), Math.abs(avgY));
+				block.setThreshold(avg*1.5);
 				block.isBackGround();
 			}
 			
 			System.out.println(avgX);
 			System.out.println(avgY);
 			System.out.println(nonzeromv);
+			System.out.println(largestVector.getX());
+			System.out.println(largestVector.getY());
 			
 
 			
