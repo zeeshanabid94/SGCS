@@ -13,7 +13,7 @@ public class BGS {
 	public BGS(Video video) {
 		_video = video;
 		_motionVectors = new ArrayList<Vector2D>();
-		_k = 4;
+		_k = 8;
 	}
 
 	public void setK(int K) {
@@ -25,6 +25,9 @@ public class BGS {
 		for (int i = 0; i < _video.getTotalFrames()-1; i++) {		// make getTotalFrames method in Video
 			System.out.println("Calculating motion vectors for frame " + i);
 			double avg = 0;
+			double avgY = 0;
+			double avgX = 0;
+			int nonzeromv = 0;
 			Frame currentFrame = _video.getFrame(i);
 			Frame nextFrame = _video.getFrame(i+1);
 			
@@ -68,16 +71,26 @@ public class BGS {
 				
 				Vector2D motionVector = new Vector2D(minSadX-block.getX(), minSadY - block.getY());
 				block.setMotionVector(motionVector);
+				if (Math.abs(motionVector.length()) > 2)
+					nonzeromv += 1;
 				avg += motionVector.length();
+				avgX += Math.abs(motionVector.getX());
+				avgY += Math.abs(motionVector.getY());
 			}
 			avg/=(double)currentFrame.getMacroBlocks().size();
+			avgX/=(double)currentFrame.getMacroBlocks().size();
+			avgY/=(double)currentFrame.getMacroBlocks().size();
 			for (MacroBlock block: currentFrame.getMacroBlocks()) {
-				block.setThreshold(avg*15);
+				if (nonzeromv > currentFrame.getMacroBlocks().size()/2)
+					block._motionVector.add(new Vector2D(avgX, avgY));
+				block.setThreshold(avgX, avgY);
 
 				block.isBackGround();
 			}
 			
-			System.out.println(avg*15);
+			System.out.println(avgX);
+			System.out.println(avgY);
+			System.out.println(nonzeromv);
 			
 
 			

@@ -12,6 +12,8 @@ public class MacroBlock {
 	Vector2D _motionVector;
 	ArrayList<MacroBlock> _neighbours;
 	double _threshold;
+	double _tX;
+	double _tY;
 	Type _type;
 
 	
@@ -23,6 +25,8 @@ public class MacroBlock {
 		_neighbours = null;
 		_threshold = 0;
 		_type = Type.UNDEFINED;
+		_tX = 0;
+		_tY = 0;
 		}
 
 	public MacroBlock(int x, int y) {
@@ -33,6 +37,8 @@ public class MacroBlock {
 		_neighbours = new ArrayList<>();
 		_threshold = 0;
 		_type = Type.UNDEFINED;
+		_tX = 0;
+		_tY  = 0;
 	}
 
 	public int getX() {
@@ -80,10 +86,15 @@ public class MacroBlock {
 	public void setThreshold(double threshold) {
 		_threshold = threshold;
 	}
+	
+	public void setThreshold(double x, double y) {
+		_tX = x;
+		_tY = y;
+	}
 	public void isBackGround() {
-		if (_motionVector.length() > _threshold) {
+		if (Math.abs(_motionVector.getX()) >= _tX) {
 			_type = Type.UNDEFINED;
-				block = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_RGB);
+			block = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_RGB);
 		}
 	}
 	

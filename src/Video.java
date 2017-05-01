@@ -56,6 +56,7 @@ public class Video {
 			  frames[frameIndex] = paddedFrame;
 			  
 		  }
+		  System.out.println("Loaded " + totalFrames + " Frames of video");
 	  }
 	  
 	  public Frame getFrame(int frameNumber) {
@@ -107,7 +108,10 @@ public class Video {
 			Video testVideo = new Video(testFile, width, height);
 			System.out.println("Done");
 		}
-
+		
+		public void resetFrames() {
+			_currentFrame = 0;
+		}
 
 		
   }
