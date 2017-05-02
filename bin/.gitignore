@@ -12,3 +12,15 @@
 /EncodedMacroBlocks.class
 /Decoder.class
 /EncodedMacroBlock.class
+/Encoder/
+/DCT/
+/Player/
+/File.class
+/FileReader.class
+/FileReaderThread.class
+/ParsingThread.class
+/TestEncoder.class
+/TestDecoder.class
+/file/
+/FileWorkerThread.class
+/FrameWorkerThread.class

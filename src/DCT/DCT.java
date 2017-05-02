@@ -1,5 +1,9 @@
+package DCT;
 import java.lang.*;
 import java.util.*;
+
+import Encoder.MacroBlock;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.*;

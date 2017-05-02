@@ -1,25 +1,66 @@
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Scanner;
 
-public class EncodedFrame extends Frame {
+import DCT.DCT;
+import DCT.FastDCT;
+import Encoder.Frame;
+import Encoder.Vector2D;
+
+public class EncodedFrame {
 	// Each Frame gets 24480 lines
-	int _x = 0;
-	int _y = 0;
+	Vector2D _gazeXY;
+	int _gazeWindowSize;
+	BufferedImage _frame;
+	int _width ;
+	int _height;
+	ArrayList<EncodedMacroBlock> _eBlocks;
 	public EncodedFrame(int w, int h) {
-		super(w,h,0,0);
-		_x = 0;
-		_y = 0;
+		_width = w;
+		_height = h;
+		_gazeWindowSize = 128;
+		_gazeXY = new Vector2D(100,100);
+		_frame = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		_eBlocks = new ArrayList<>();
+	}
+	
+	public void setGaze(int gazeX, int gazeY) {
+		_gazeXY.setX(gazeX);
+		_gazeXY.setY(gazeY);
+	}
+	
+	public void parseFrame(String frame) {
+		int _x = 0;
+		int _y = 0;
+//		Scanner framein = new Scanner(frame);
+		String[] framein = frame.split("/");
+		for (int i = 0; i < 2040; i++) {
+			_eBlocks.add(new EncodedMacroBlock(framein[i], _x, _y));
+			_x += 16;
+			if (_x >= _width) {
+				_x = 0;
+				_y+= 16;
+			}
+		}
+	}
+	
+	public BufferedImage getImage() {
+		for (EncodedMacroBlock eblock : _eBlocks) {
+			eblock.decodeMacroBlock(_frame, new FastDCT(), _gazeXY, _gazeWindowSize);
+		}
+		return _frame;
 	}
 	
 	public void addMacroBlock(StringBuilder macroblock, DCT iDCT) {
 
-		EncodedMacroBlock eMacro = new EncodedMacroBlock(macroblock.toString(), _x, _y, iDCT);
-		eMacro.decodeMacroBlock();
-		this._macroblocks.add(eMacro);
+//		EncodedMacroBlock eMacro = new EncodedMacroBlock(macroblock.toString(), _x, _y, iDCT);
+//		eMacro.decodeMacroBlock(_frame, iDCT);
 		
-		_x+=16;
+//		_x+=16;
 		
-		if (_x >= width) {
-			_x=0;
-			_y+=16;
-		}
+//		if (_x >= _width) {
+//			_x=0;
+//			_y+=16;
+//		}
 	}
 }

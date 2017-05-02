@@ -10,16 +10,29 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 
+import DCT.DCT;
+import Encoder.Vector2D;
+import Encoder.Video;
+
 public class Decoder {
 	File _file;
 	private BufferedReader fin;
 	DCT _idct;
 	Video _video;
+	int _gazeWindowSize;
+	Vector2D _gazeXY;
 	
-	public Decoder(String encodedFilePath) {
+	public Decoder(String encodedFilePath, int gazeX, int gazeY) {
 		_video = new Video(960, 544);
 		_file = new File(encodedFilePath);
 		_idct = new DCT(0,16,256);
+		_gazeWindowSize = 64;
+		_gazeXY = new Vector2D(gazeX, gazeY);
+	}
+	
+	public void setGaze(int gazeX, int gazeY) {
+		_gazeXY.setX(gazeX);
+		_gazeXY.setY(gazeY);
 	}
 	
 	public void DecodeFrames() throws IOException {
@@ -37,8 +50,6 @@ public class Decoder {
 				eFrame.addMacroBlock(input, _idct);
 			}
 			System.out.println(frameNo++);
-			_video.frames.add(eFrame);
-			_video.totalFrames = _video.frames.size();
 
 		}
 	}

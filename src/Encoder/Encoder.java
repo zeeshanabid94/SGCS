@@ -1,7 +1,11 @@
+package Encoder;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import DCT.DCT;
+import file.CompressedFileHeader;
 
 public class Encoder {
 	Video _video;
@@ -17,11 +21,13 @@ public class Encoder {
 	}
 	
 	public void WriteOutputFile() throws IOException {
-		_bgs.CalculateMotionVectors();
+//		_bgs.CalculateMotionVectors();
 		
 		FileOutputStream fout = new FileOutputStream(_outputFile);
+		CompressedFileHeader header = new CompressedFileHeader(70);
+		int currentByteIndex = 0;
 		
-		for (int i = 0; i < _video.getTotalFrames(); i++) {
+		for (int i = 0; i < 70; i++) {
 			for (MacroBlock block: _video.getFrame(i).getMacroBlocks()) {
 				for (int y = 0; y < 16; y+=8) {
 					for (int x = 0; x < 16; x+=8) {
@@ -76,15 +82,21 @@ public class Encoder {
 						}
 						
 						encodedLine += "\n";
-						
-						fout.write(encodedLine.getBytes(), 0, encodedLine.getBytes().length);
-						
+						currentByteIndex += encodedLine.getBytes().length;
+						fout.write(encodedLine.getBytes());
 					}
 				}
+				fout.write("/".getBytes());
+				currentByteIndex += 1;
 			}
 			System.out.println("Frame " + i+ " compressed");
+			fout.write("&".getBytes());
+			currentByteIndex += 1;
+			header.addByteIndex(currentByteIndex);
 		}
 		
 		fout.close();
+		header.createHeaderFile("E:/HeaderFile.hdr");
+		header.writeHeaderFile();
 	}
 }

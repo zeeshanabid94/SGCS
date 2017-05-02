@@ -1,3 +1,4 @@
+package Encoder;
 
 public class Vector2D {
 	double _x;
@@ -40,5 +41,13 @@ public class Vector2D {
 	
 	public double length() {
 		return Math.sqrt(Math.pow(_x, 2) + Math.pow(_y, 2));
+	}
+	
+	public void setX(int x) {
+		_x = x;
+	}
+	
+	public void setY(int y) {
+		_y = y;
 	}
 }
