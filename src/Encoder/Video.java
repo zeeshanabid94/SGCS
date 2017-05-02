@@ -106,6 +106,9 @@ public class Video {
 			return totalFrames;
 		}
 		
+		public void resetFrames() {
+			_currentFrame = 0;
+		}
 
 		
 		public static void main(String[] args) {

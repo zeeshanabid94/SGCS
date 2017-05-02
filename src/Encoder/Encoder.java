@@ -21,13 +21,13 @@ public class Encoder {
 	}
 	
 	public void WriteOutputFile() throws IOException {
-//		_bgs.CalculateMotionVectors();
+		_bgs.CalculateMotionVectors();
 		
 		FileOutputStream fout = new FileOutputStream(_outputFile);
-		CompressedFileHeader header = new CompressedFileHeader(70);
+		CompressedFileHeader header = new CompressedFileHeader(200);
 		int currentByteIndex = 0;
 		
-		for (int i = 0; i < 70; i++) {
+		for (int i = 0; i < 200; i++) {
 			for (MacroBlock block: _video.getFrame(i).getMacroBlocks()) {
 				for (int y = 0; y < 16; y+=8) {
 					for (int x = 0; x < 16; x+=8) {

@@ -44,10 +44,18 @@ public class EncodedFrame {
 		}
 	}
 	
-	public BufferedImage getImage() {
+	public BufferedImage getImage(int fn, int bn) {
 		for (EncodedMacroBlock eblock : _eBlocks) {
-			eblock.decodeMacroBlock(_frame, new FastDCT(), _gazeXY, _gazeWindowSize);
-		}
+			int quantizer = -1;
+			
+			if (eblock.getType() == 1){
+				quantizer = fn;
+				eblock.decodeMacroBlock(_frame, _gazeXY, _gazeWindowSize, quantizer);	
+			} else {
+				quantizer = bn;
+				eblock.decodeMacroBlock(_frame, _gazeXY, _gazeWindowSize, quantizer);
+			}
+		}	
 		return _frame;
 	}
 	

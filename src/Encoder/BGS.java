@@ -24,7 +24,7 @@ public class BGS {
 	
 	public void CalculateMotionVectors() {
 
-		for (int i = 0; i < _video.getTotalFrames()-1; i++) {		// make getTotalFrames method in Video
+		for (int i = 0; i < 200; i++) {		// change value back when presenting
 			System.out.println("Calculating motion vectors for frame " + i);
 			double avg = 0;
 			double avgY = 0;

@@ -53,12 +53,12 @@ public class EncodedMacroBlock {
 		
 		}
 	
-	public void decodeMacroBlock(BufferedImage Frame, FastDCT iDCT, Vector2D gazeXY,int gazeWindowSize) {
+	public void decodeMacroBlock(BufferedImage Frame, Vector2D gazeXY,int gazeWindowSize, int quantizer) {
 		int dx = 0, dy = 0;
 		int[][] rDCT = new int[8][8];
 		int[][] gDCT = new int[8][8];
 		int[][] bDCT = new int[8][8];
-
+		FastDCT iDCT = new FastDCT();
 //		System.out.println(gazeXY.getX() + "," + gazeXY.getY());
 		for(int y =0; y < 16; y+=8) {
 			for(int x =0; x< 16; x+=8) {
@@ -80,10 +80,11 @@ public class EncodedMacroBlock {
 					}
 				} else {
 					for (int i = 0; i < 64; i++ ) {
-						rDCT[i/8][i%8] = (_rBlock[(i/8) + y][(i%8) + x]/256) * 256;
-						gDCT[i/8][i%8] = (_gBlock[(i/8) + y][(i%8) + x]/256) * 256;
-						bDCT[i/8][i%8] = (_bBlock[(i/8) + y][(i%8) + x]/256) * 256;
+						rDCT[i/8][i%8] = (_rBlock[(i/8) + y][(i%8) + x]/quantizer) * quantizer;
+						gDCT[i/8][i%8] = (_gBlock[(i/8) + y][(i%8) + x]/quantizer) * quantizer;
+						bDCT[i/8][i%8] = (_bBlock[(i/8) + y][(i%8) + x]/quantizer) * quantizer;
 					}
+
 	//				rDCT = iDCT.quantizeBlock(rDCT, _type);
 	//				gDCT = iDCT.quantizeBlock(gDCT, _type);
 	//				bDCT = iDCT.quantizeBlock(bDCT, _type);
@@ -97,6 +98,11 @@ public class EncodedMacroBlock {
 				}
 			}
 		}
+	}
+
+	public int getType() {
+		// TODO Auto-generated method stub
+		return _type;
 	}
 	
 }

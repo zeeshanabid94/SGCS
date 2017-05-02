@@ -1,9 +1,11 @@
 package Player;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.TimeUnit;
@@ -13,133 +15,161 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.LayoutStyle;
 
+import Encoder.BGS;
 import Encoder.Encoder;
 import Encoder.Frame;
-import Encoder.Vector2D;
 import Encoder.Video;
+
+import java.awt.*;
+
 
 public class Player {
 	
 	Video _video;
 	JFrame _mainWindow;
 	JLabel _videoWindow;
-	boolean _play;
-	Vector2D _mouseXY;
+	boolean _play,_pause,_stop;
+	int _mouseX, _mouseY;
+	
 	
 	
 	public Player() {
-		_mouseXY = new Vector2D(400,200);
 		_play = false;
+		_pause = false;
+		_stop = false;
 		_mainWindow = new JFrame("Video Player");
-		_mainWindow.setSize(960, 800);
-		JPanel panel = new JPanel(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
+		_mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		_mainWindow.setSize(960, 605);
+		JSplitPane splitPane = new JSplitPane();;
+        JPanel topPanel = new JPanel();         // our top component
+        JPanel bottomPanel = new JPanel();      // our bottom component
+        splitPane.setBorder(null);
+        _mainWindow.getContentPane().add(splitPane);
+		
+		JPanel panel2 = new JPanel(new GridBagLayout());
+		 splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);  // we want it to split the window verticaly
+		 splitPane.setDividerLocation(540);                    // the initial position of the divider is 200 (our window is 540 pixels high)
+		 splitPane.setTopComponent(topPanel);                  // at the top we want our "topPanel"
+		 splitPane.setBottomComponent(bottomPanel);            // and at the bottom we want our "bottomPanel"
+		 
+
+//		 Thread controls = new Thread(new RunningThread());
+		 
 		JButton play = new JButton("Play");
-		c.gridx = 0;
-		c.gridy = 1;
-		panel.add(play, c);
+		GridBagConstraints cPlay = new GridBagConstraints();
+		cPlay.fill = GridBagConstraints.HORIZONTAL;
+		cPlay.gridx = 0;       
+		cPlay.gridy = 0;       
+		bottomPanel.add(play, cPlay);
+		play.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)   {
+				_play = true;
+				_pause = false;
+				_stop = false;
+				
+			  }
+			});
 		
-		c = new GridBagConstraints();
 		JButton pause = new JButton("Pause");
-		c.gridx = 1;
-		c.gridy = 1;
-		panel.add(pause, c);
+		GridBagConstraints cPause = new GridBagConstraints();
+		cPause.fill = GridBagConstraints.HORIZONTAL;
+		cPause.gridx = 1; 
+		cPause.gridy = 0;
+		bottomPanel.add(pause, cPause);
+		pause.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)   {
+				_pause = true;
+				_stop = false;
+				_play = false;
+			  }
+			});
 		
-		c = new GridBagConstraints();
 		JButton stop = new JButton("Stop");
-		c.gridx = 2;
-		c.gridy = 1;
-		panel.add(stop, c);
+		GridBagConstraints cStop = new GridBagConstraints();
+		cStop.fill = GridBagConstraints.HORIZONTAL;
+		cStop.gridx = 2; 
+		cStop.gridy = 0;
+		bottomPanel.add(stop, cStop);
+		//when stop button is clicked set stop to true
+		stop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)   {
+			  _stop = true;
+			  _play = false;
+			  _pause = false;
+			  }
+			});
+
+		GridBagConstraints cVideo = new GridBagConstraints();
+		_videoWindow = new JLabel();
 		
-		c = new GridBagConstraints();
-		_videoWindow = new JLabel("Video");
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 0;
-		panel.add(_videoWindow, c);
-		
-		_videoWindow.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseReleased(MouseEvent e) {
+		_videoWindow.addMouseMotionListener(new MouseMotionListener() {			// This is the mouse motion listener
+																				// which records the values of x and y
+			@Override															// whenever the mouse moves and stores
+			public void mouseMoved(MouseEvent e) {								// then in variables _mouseX and _mouseY
 				// TODO Auto-generated method stub
-				
+				_mouseX = e.getX();
+				_mouseY = e.getY();
 			}
 			
 			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				_mouseXY.setX(e.getX());
-				_mouseXY.setY(e.getY());
-				System.out.println(e.getX() + " , " + e.getY());
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseDragged(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 		});
+		cVideo.fill = GridBagConstraints.HORIZONTAL;
+
+		topPanel.add(_videoWindow, cVideo);
 		
-		_mainWindow.setContentPane(panel);
+		
 		_mainWindow.setVisible(true);
-	}
-	
-	public int getMouseX() {
-		return (int)_mouseXY.getX();
-	}
-	
-	public int getMouseY() {
-		return (int)_mouseXY.getY();
 	}
 	
 	public void setVideo(Video video) {
 		_video = video;
 	}
 	
-	public void viewFrame(BufferedImage Frame) {
-		_videoWindow.setIcon(new ImageIcon(Frame));
-	}
 	public void Play() throws Exception {
-		if (_video == null) {
-			throw new Exception("No video found");
-		}
-		String fileoutpath = "E:/file_markafterblocks_&afterFrame_withHeader.cmp";
+//		if (_video == null) {
+//			throw new Exception("No video found");
+//		}
+		String fileoutpath = "E:/finaltest_200frames.cmp";
 		Encoder encoded = new Encoder(_video, fileoutpath);
 		encoded.WriteOutputFile();
-////		
-//		Decoder decoded = new Decoder(fileoutpath);
+//		FrameBuffer buffer = new FrameBuffer(30);
+//		Decoder decoded = new Decoder(fileoutpath, buffer);
+//		Thread decoderThread = new Thread(decoded);
+//		decoderThread.start();
 //		decoded.DecodeFrames();
 //		_video = decoded.getVideo();
-////		BGS BFSeparation = new BGS(_video);
-////		BFSeparation.CalculateMotionVectors();
-//
-////		String fileoutpath = "C:/Users/zabid/Desktop/compressed.cmp";
-////		Encoder encoded = new Encoder(_video, fileoutpath);
-////		encoded.WriteOutputFile();
+//		BGS BFSeparation = new BGS(_video);
+//		BFSeparation.CalculateMotionVectors();
+
+//		String fileoutpath = "C:/Users/zabid/Desktop/compressed.cmp";
+//		Encoder encoded = new Encoder(_video, fileoutpath);
+//		encoded.WriteOutputFile();
+		
+//		BGS BFSeparation = new BGS(_video);
+//		BFSeparation.CalculateMotionVectors();
+
 //		
-////		BGS BFSeparation = new BGS(_video);
-////		BFSeparation.CalculateMotionVectors();
-//		_play = true;
-//		while(_play == true) {
-//			Frame newFrame = _video.getNextFrame();
-////			TimeUnit.MILLISECONDS.sleep(33);
-//			_videoWindow.setIcon(new ImageIcon(newFrame.constructImageFromMacroblocks()));
-//		}
+		
+		_play = true;
+		while(true) {
+			while(_play == true) {
+				Frame newFrame = _video.getNextFrame();
+				TimeUnit.MILLISECONDS.sleep(33);
+				_videoWindow.setIcon(new ImageIcon(newFrame.constructImageFromMacroblocks()));
+			}
+			if(_stop == true) {
+				_video.resetFrames();
+			}
+			TimeUnit.MILLISECONDS.sleep(1); //sleep so thread can see updated values
+			
+		}
 	}
 	
 	public static void main(String args[]) throws Exception {
@@ -156,7 +186,21 @@ public class Player {
 		Video video = new Video(file, width, height);
 		player.setVideo(video);
 		player.Play();
-		while(true);
+	}
+
+	public int getMouseX() {
+		// TODO Auto-generated method stub
+		return _mouseX;
+	}
+
+	public int getMouseY() {
+		// TODO Auto-generated method stub
+		return _mouseY;
+	}
+
+	public void viewFrame(BufferedImage image) {
+		// TODO Auto-generated method stub
+		_videoWindow.setIcon(new ImageIcon(image));
 	}
 
 }
