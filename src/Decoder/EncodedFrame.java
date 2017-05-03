@@ -1,3 +1,4 @@
+package Decoder;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -9,8 +10,6 @@ import Encoder.Vector2D;
 
 public class EncodedFrame {
 	// Each Frame gets 24480 lines
-	Vector2D _gazeXY;
-	int _gazeWindowSize;
 	BufferedImage _frame;
 	int _width ;
 	int _height;
@@ -18,16 +17,10 @@ public class EncodedFrame {
 	public EncodedFrame(int w, int h) {
 		_width = w;
 		_height = h;
-		_gazeWindowSize = 128;
-		_gazeXY = new Vector2D(100,100);
 		_frame = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 		_eBlocks = new ArrayList<>();
 	}
 	
-	public void setGaze(int gazeX, int gazeY) {
-		_gazeXY.setX(gazeX);
-		_gazeXY.setY(gazeY);
-	}
 	
 	public void parseFrame(String frame) {
 		int _x = 0;
@@ -44,16 +37,16 @@ public class EncodedFrame {
 		}
 	}
 	
-	public BufferedImage getImage(int fn, int bn) {
+	public BufferedImage getImage(int gazeX, int gazeY, int gazeSize, int fn, int bn) {
 		for (EncodedMacroBlock eblock : _eBlocks) {
 			int quantizer = -1;
 			
 			if (eblock.getType() == 1){
 				quantizer = fn;
-				eblock.decodeMacroBlock(_frame, _gazeXY, _gazeWindowSize, quantizer);	
+				eblock.decodeMacroBlock(_frame, new Vector2D(gazeX, gazeY), gazeSize, quantizer);	
 			} else {
 				quantizer = bn;
-				eblock.decodeMacroBlock(_frame, _gazeXY, _gazeWindowSize, quantizer);
+				eblock.decodeMacroBlock(_frame, new Vector2D(gazeX, gazeY), gazeSize, quantizer);
 			}
 		}	
 		return _frame;

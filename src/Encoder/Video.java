@@ -121,5 +121,7 @@ public class Video {
 		}
 
 
-		
+		public boolean hasNext() {
+			return _currentFrame < totalFrames;
+		}
   }

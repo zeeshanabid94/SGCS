@@ -13,7 +13,7 @@ public class MacroBlock {
 	Vector2D _motionVector;
 	ArrayList<MacroBlock> _neighbours;
 	double _threshold;
-	Type _type;
+	private Type _type;
 
 	
 	public MacroBlock() {
@@ -23,7 +23,7 @@ public class MacroBlock {
 		_motionVector = null;
 		_neighbours = null;
 		_threshold = 0;
-		_type = Type.UNDEFINED;
+		setType(Type.UNDEFINED);
 		}
 
 	public MacroBlock(int x, int y) {
@@ -33,7 +33,7 @@ public class MacroBlock {
 		_motionVector = null;
 		_neighbours = new ArrayList<>();
 		_threshold = 0;
-		_type = Type.UNDEFINED;
+		setType(Type.UNDEFINED);
 	}
 
 	public int getX() {
@@ -83,10 +83,10 @@ public class MacroBlock {
 	}
 	public void isBackGround() {
 		if (_motionVector.length() > _threshold) {
-			_type = Type.FOREGROUND;
+			setType(Type.FOREGROUND);
 				//block = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_RGB);
 		} else {
-			_type = Type.BACKGROUND;
+			setType(Type.BACKGROUND);
 
 		}
 	}
@@ -110,5 +110,9 @@ public class MacroBlock {
 	
 	public Type getType() {
 		return _type;
+	}
+
+	public void setType(Type _type) {
+		this._type = _type;
 	}
 }

@@ -1,3 +1,4 @@
+package Decoder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -5,46 +6,32 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.SynchronousQueue;
 
+import ThreadInterface.ThreadInterface;
 import file.CompressedFileHeader;
 
-public class FileReaderThread implements Runnable {
+public class FileReaderThread extends ThreadInterface<String> {
 	File _file;
 	Scanner _fin;
-	ConcurrentLinkedQueue<String> _frames;
-	volatile boolean _hasNext;
 	CompressedFileHeader _header;
 	
 	public FileReaderThread(String filepath) throws FileNotFoundException {
 		_file = new File(filepath);
 		_fin = new Scanner(new FileInputStream(_file));
-		_frames = new ConcurrentLinkedQueue<>();
 		_hasNext = true;
-		_header = CompressedFileHeader.parseHeaderFile("E:/HeaderFile.hdr");
+//		_header = CompressedFileHeader.parseHeaderFile("E:/HeaderFile.hdr");
+		_header = CompressedFileHeader.parseHeaderFile("/Users/shane/Desktop/HeaderFile.hdr");
+		_running = false;
 	}
 
-	public synchronized String getNextFrame() throws InterruptedException {
-		if (_frames.isEmpty())
-			wait();
-		return _frames.remove();
-	}
-	
-	public synchronized void addFrame(String frame) {
-		_frames.add(frame);
-		this.notifyAll();
-	}
-	
-	public boolean hasNextFrame() {
-		return _hasNext || !_frames.isEmpty();
-	}
 	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-
+		_running = true;
 		long tNow = System.currentTimeMillis();
 		int i = 0;
 		try {
-			while ((_fin.hasNext() == _hasNext)) {
+			while ((_fin.hasNext() == _hasNext) && _running == true) {
 				FileWorkerThread ft1 = new FileWorkerThread(_file, _header.getByteIndex(i-1), _header.getByteIndex(i) - _header.getByteIndex(i-1));
 				i++;
 				FileWorkerThread ft2 = new FileWorkerThread(_file, _header.getByteIndex(i-1), _header.getByteIndex(i) - _header.getByteIndex(i-1));
@@ -68,4 +55,5 @@ public class FileReaderThread implements Runnable {
 		
 		System.out.println("File Reading took " + (tLater - tNow) + " ms");
 	}
+
 }

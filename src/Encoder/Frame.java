@@ -74,7 +74,13 @@ public class Frame {
 		macroblock.setPixel(x-macroblock.getX(), y - macroblock.getY(), pixel);
 	}
 	
-
+	public MacroBlock getMacroBlock(int x, int y) {
+		int macroBlockX = x / 16;
+		int macroBlockY = y / 16;
+		int wMacro = width/16;
+		int macroIndex = macroBlockY * wMacro + macroBlockX;
+		return _macroblocks.get(macroIndex);
+	}
 	
 	public BufferedImage getFrameImage() {
 		return image;

@@ -1,9 +1,11 @@
+package Decoder;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,50 +13,70 @@ import java.io.Reader;
 import java.util.ArrayList;
 
 import DCT.DCT;
+import Encoder.Encoder;
 import Encoder.Vector2D;
 import Encoder.Video;
+import ThreadInterface.ThreadInterface;
 
 public class Decoder {
-	File _file;
-	private BufferedReader fin;
-	DCT _idct;
-	Video _video;
-	int _gazeWindowSize;
-	Vector2D _gazeXY;
+//	File _file;
+//	private BufferedReader fin;
+//	DCT _idct;
+//	Video _video;
+//	int _gazeWindowSize;
+//	Vector2D _gazeXY;
 	
-	public Decoder(String encodedFilePath, int gazeX, int gazeY) {
-		_video = new Video(960, 544);
-		_file = new File(encodedFilePath);
-		_idct = new DCT(0,16,256);
-		_gazeWindowSize = 64;
-		_gazeXY = new Vector2D(gazeX, gazeY);
+	ThreadInterface<String> _fThread;
+	ThreadInterface<EncodedFrame> _pThread;
+	EncodedFrame _currentframe;
+	String _filePath;
+	Encoder _encoder;
+	
+	public Decoder(String encodedFilePath) throws FileNotFoundException {
+		_filePath = encodedFilePath;
+		_fThread = new FileReaderThread(_filePath);
+		_pThread = new ParsingThread(_fThread);
 	}
 	
-	public void setGaze(int gazeX, int gazeY) {
-		_gazeXY.setX(gazeX);
-		_gazeXY.setY(gazeY);
+	public Decoder(Encoder encoder) throws FileNotFoundException {
+		_filePath = null;
+		_encoder = encoder;
+		_fThread = encoder; 
+		_pThread = new ParsingThread(_fThread);
 	}
 	
-	public void DecodeFrames() throws IOException {
-		fin = new BufferedReader(new FileReader(_file));
-		EncodedFrame eFrame = null;
-		int frameNo = 0;
-		StringBuilder input = new StringBuilder();
-		while(fin.ready()) {
-			eFrame	= new EncodedFrame(_video.WIDTH, _video.HEIGHT);
-			for (int i = 0; i < 2040; i++) {
-				input.delete(0, input.length());
-				for (int j = 0; j < 12; j++) {
-					input.append(fin.readLine()).append("\n");
-				}
-				eFrame.addMacroBlock(input, _idct);
-			}
-			System.out.println(frameNo++);
+	public void startThreads() {
+		if (_fThread != null)
+			new Thread(_fThread).start();
+//		TimeUnit.MILLISECONDS.sleep(1000);
+		if (!_pThread.isRunning())
+			new Thread(_pThread).start();
+	}
+	
+	public EncodedFrame getNextFrame() throws InterruptedException {
+		if (!_pThread.hasNext())
+			return null;
+		_currentframe = _pThread.getNextFrame();
+		return _currentframe;
+	}
 
+	public EncodedFrame getCurrentFrame() {
+		return _currentframe;
+	}
+
+	public void reset() throws FileNotFoundException { 
+		_fThread.stop();
+		_pThread.stop();
+		while (_fThread.isRunning() || _pThread.isRunning());
+		if (_fThread.getClass().isInstance(Encoder.class)) {
+			_fThread = _encoder;
+			_encoder.reset();
+		} else {
+			_fThread = new FileReaderThread(_filePath);
 		}
+
+		_pThread = new ParsingThread(_fThread);
 	}
 	
-	public Video getVideo() {
-		return _video;
-	}
+	
 }

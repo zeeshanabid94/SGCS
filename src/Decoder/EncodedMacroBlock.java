@@ -1,3 +1,5 @@
+package Decoder;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
@@ -62,7 +64,7 @@ public class EncodedMacroBlock {
 //		System.out.println(gazeXY.getX() + "," + gazeXY.getY());
 		for(int y =0; y < 16; y+=8) {
 			for(int x =0; x< 16; x+=8) {
-				if (_x >= gazeXY.getX() && _y >= gazeXY.getY() && _x < (gazeXY.getX() + gazeWindowSize) && _y < (gazeXY.getY() + gazeWindowSize)) {
+				if (_x >= gazeXY.getX()- gazeWindowSize/2 && _y >= gazeXY.getY() - gazeWindowSize/2 && _x < (gazeXY.getX() + gazeWindowSize/2) && _y < (gazeXY.getY() + gazeWindowSize/2)) {
 					for (int i = 0; i < 64; i++ ) {
 						rDCT[i/8][i%8] = _rBlock[(i/8) + y][(i%8) + x];
 						gDCT[i/8][i%8] = _gBlock[(i/8) + y][(i%8) + x];

@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
@@ -18,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.LayoutStyle;
 
+import Decoder.Decoder;
+import Decoder.EncodedFrame;
 import Encoder.BGS;
 import Encoder.Encoder;
 import Encoder.Frame;
@@ -33,10 +36,15 @@ public class Player {
 	JLabel _videoWindow;
 	boolean _play,_pause,_stop;
 	int _mouseX, _mouseY;
+	Decoder _decoder;
+	int fn, bn;
 	
 	
 	
-	public Player() {
+	public Player(String file, int n1, int n2) throws FileNotFoundException {
+		fn = n1;
+		bn = n2;
+		_decoder = new Decoder(file);
 		_play = false;
 		_pause = false;
 		_stop = false;
@@ -69,7 +77,8 @@ public class Player {
 				_play = true;
 				_pause = false;
 				_stop = false;
-				
+				System.out.println("Play true");
+				_decoder.startThreads();
 			  }
 			});
 		
@@ -84,6 +93,8 @@ public class Player {
 				_pause = true;
 				_stop = false;
 				_play = false;
+				
+				System.out.println("Pause true");
 			  }
 			});
 		
@@ -99,6 +110,7 @@ public class Player {
 			  _stop = true;
 			  _play = false;
 			  _pause = false;
+			  System.out.println("Stop true");
 			  }
 			});
 
@@ -136,18 +148,18 @@ public class Player {
 //		if (_video == null) {
 //			throw new Exception("No video found");
 //		}
-		String fileoutpath = "E:/finaltest_200frames.cmp";
-		Encoder encoded = new Encoder(_video, fileoutpath);
-		encoded.WriteOutputFile();
+//		String fileoutpath = "E:/finaltest_200frames.cmp";
+//		String fileoutpath = "/Users/shane/Desktop/finaltest_video3.cmp";
+//		Encoder encoded = new Encoder(_video, fileoutpath);
+//		encoded.WriteOutputFile(); }
+			
 //		FrameBuffer buffer = new FrameBuffer(30);
-//		Decoder decoded = new Decoder(fileoutpath, buffer);
+//		_decoder = new Decoder(fileoutpath);
+		_decoder.startThreads();
 //		Thread decoderThread = new Thread(decoded);
 //		decoderThread.start();
 //		decoded.DecodeFrames();
 //		_video = decoded.getVideo();
-//		BGS BFSeparation = new BGS(_video);
-//		BFSeparation.CalculateMotionVectors();
-
 //		String fileoutpath = "C:/Users/zabid/Desktop/compressed.cmp";
 //		Encoder encoded = new Encoder(_video, fileoutpath);
 //		encoded.WriteOutputFile();
@@ -158,33 +170,44 @@ public class Player {
 //		
 		
 		_play = true;
+		int frames = 0;
+		int secs = 0;
 		while(true) {
-			while(_play == true) {
-				Frame newFrame = _video.getNextFrame();
-				TimeUnit.MILLISECONDS.sleep(33);
-				_videoWindow.setIcon(new ImageIcon(newFrame.constructImageFromMacroblocks()));
+			long tNow = System.currentTimeMillis();
+			if (_play == true) {
+				EncodedFrame newFrame = _decoder.getNextFrame();
+				_videoWindow.setIcon(new ImageIcon(newFrame.getImage(_mouseX, _mouseY, 128, 16, 256)));
+				frames ++;
 			}
 			if(_stop == true) {
-				_video.resetFrames();
+				_decoder.reset();
+				_stop = false;
 			}
-			TimeUnit.MILLISECONDS.sleep(1); //sleep so thread can see updated values
-			
+			if (_pause == true) {
+				EncodedFrame newFrame = _decoder.getCurrentFrame();
+				_videoWindow.setIcon(new ImageIcon(newFrame.getImage(_mouseX, _mouseY, 128, 16, 256)));
+			}
+//			TimeUnit.MILLISECONDS.sleep(33); //sleep so thread can see updated values
+			long tLater = System.currentTimeMillis();
+			System.out.println("Time between frames "  + (tLater - tNow));
+			secs += (tLater - tNow);
+			if (secs > 1000) {
+				System.out.println("FPS: " + ((double) frames)/((double) secs) * 1000);
+				secs = 0;
+				frames = 0;
+			}
 		}
 	}
 	
 	public static void main(String args[]) throws Exception {
-		Player player = new Player();
+
 		//"/Users/shane/Documents/workspace/SGCS_570_Final_Proj/Final/oneperson_960_540.rgb"
 		String file = args[0];
-		int width, height;
-		width = 960;
-		height = 540;
-		if(args.length > 1) {
-			width = Integer.parseInt(args[1]);
-			height = Integer.parseInt(args[2]);
-		}
-		Video video = new Video(file, width, height);
-		player.setVideo(video);
+		int n1 = Integer.parseInt(args[1]);
+		int n2 = Integer.parseInt(args[2]);
+		Player player = new Player(file, n1, n2);
+//		Video video = new Video(file, width, height);
+//		player.setVideo(video);
 		player.Play();
 	}
 

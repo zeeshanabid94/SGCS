@@ -360,4 +360,3 @@ public class DCT
     	return block;
     }
 }
-

@@ -37,6 +37,9 @@ exception statement from your version. */
 
 package DCT;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+
 /**
  * Discrete Cosine Transformations.
  */
@@ -154,14 +157,15 @@ public class FastDCT
     return (buffer);
   }
 
-  public float[][] fast_fdct(float[][] input)
+  public int[][] fast_fdct(BufferedImage input, String color)
   {
-    float output[][] = new float[8][8];
+    int output[][] = new int[8][8];
     double temp[][] = new double[8][8];
     double temp1;
     int i;
     int j;
     int k;
+    int pxl;
 
     for (i = 0; i < 8; i++)
       {
@@ -170,7 +174,15 @@ public class FastDCT
             temp[i][j] = 0.0;
             for (k = 0; k < 8; k++)
               {
-                temp[i][j] += (((int) (input[i][k]) - 128) * cT[k][j]);
+            	Color currentRGB = new Color(input.getRGB(i, k));
+            	if (color.equals("red")) {
+            		pxl = currentRGB.getRed();
+            	} else if(color.equals("green")) {
+            		pxl = currentRGB.getGreen();
+            	} else {
+            		pxl = currentRGB.getBlue();
+            	}
+                temp[i][j] += (((int) (pxl) - 128) * cT[k][j]);
               }
           }
       }
@@ -239,7 +251,7 @@ public class FastDCT
     return output;
   }
 
-  public double[][] idj_fast_fdct(float input[][])
+  public double[][] idj_fast_fdct(BufferedImage input, String color)
   {
     double output[][] = new double[8][8];
     double tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
@@ -247,13 +259,22 @@ public class FastDCT
     double z1, z2, z3, z4, z5, z11, z13;
     int i;
     int j;
+    int pxl;
 
     // Subtracts 128 from the input values
     for (i = 0; i < 8; i++)
       {
         for (j = 0; j < 8; j++)
           {
-            output[i][j] = ((double) input[i][j] - (double) 128.0);
+        	Color currentRGB = new Color(input.getRGB(j, i));
+        	if (color.equals("red")) {
+        		pxl = currentRGB.getRed();
+        	} else if(color.equals("green")) {
+        		pxl = currentRGB.getGreen();
+        	} else {
+        		pxl = currentRGB.getBlue();
+        	}
+            output[i][j] = ((double) pxl - (double) 128.0);
             //                        input[i][j] -= 128;
 
           }
