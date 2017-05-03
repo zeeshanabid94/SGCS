@@ -176,7 +176,7 @@ public class Player {
 			long tNow = System.currentTimeMillis();
 			if (_play == true) {
 				EncodedFrame newFrame = _decoder.getNextFrame();
-				_videoWindow.setIcon(new ImageIcon(newFrame.getImage(_mouseX, _mouseY, 128, 16, 256)));
+				_videoWindow.setIcon(new ImageIcon(newFrame.getImage(_mouseX, _mouseY, 128, fn, bn)));
 				frames ++;
 			}
 			if(_stop == true) {
@@ -185,7 +185,7 @@ public class Player {
 			}
 			if (_pause == true) {
 				EncodedFrame newFrame = _decoder.getCurrentFrame();
-				_videoWindow.setIcon(new ImageIcon(newFrame.getImage(_mouseX, _mouseY, 128, 16, 256)));
+				_videoWindow.setIcon(new ImageIcon(newFrame.getImage(_mouseX, _mouseY, 128, fn, bn)));
 			}
 //			TimeUnit.MILLISECONDS.sleep(33); //sleep so thread can see updated values
 			long tLater = System.currentTimeMillis();
